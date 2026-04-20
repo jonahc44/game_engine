@@ -1,0 +1,59 @@
+{
+    "$schema": "https://raw.githubusercontent.com/sumneko/vscode-lua/master/setting/schema.json",
+    "runtime": {
+        "version": "Lua 5.3",
+        "path": [
+            "?.lua",
+            "?/init.lua",
+            "?/?.lua"
+        ]
+    },
+    "diagnostics": {
+        "globals": [
+            // --- Core ---
+            "premake",
+            "workspace",
+            "project",
+            
+            // --- Setup ---
+            "configurations",
+            "architecture",
+            "startproject",
+            "kind",
+            "language",
+            "cppdialect",
+            
+            // --- Files & Paths ---
+            "files",
+            "excludes",
+            "includedirs",
+            "path",
+            
+            // --- Filters & Targeting ---
+            "filter",
+            "filename",
+            "targetname",
+            "targetdir",
+            "toolset",
+            "links",
+            "libdirs",
+            "frameworkdirs",
+            "linkoptions",
+            
+            // --- Build Settings ---
+            "optimize",
+            "defines",
+            "flags",
+            "buildoptions",
+            
+            // --- Platform Specific ---
+            "xcodebuildsettings"
+        ]
+    },
+    "workspace": {
+        "library": [
+            "~/premake-core/src/base"
+        ],
+        "checkThirdParty": false
+    }
+}

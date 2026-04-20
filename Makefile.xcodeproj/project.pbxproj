@@ -1,0 +1,250 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0DC0610CA60D46BED454474C /* glm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 1E51F91462A09E86A4C7D754 /* glm.cpp */; };
+		6FB988CECAFADC409E55270E /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = E88E3016FFA0CB48EFBCC656 /* engine.cpp */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0DDC1102522AB6749451EF42 /* matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = matrix.h; path = third_party/glm/simd/matrix.h; sourceTree = "<group>"; };
+		1D17B9B8C005E06A4F2BBFF8 /* game_engine */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = game_engine; path = game_engine; sourceTree = BUILT_PRODUCTS_DIR; };
+		1E51F91462A09E86A4C7D754 /* glm.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = glm.cpp; path = third_party/glm/detail/glm.cpp; sourceTree = "<group>"; };
+		2CDBDB3684414E28364F6976 /* geometric.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = geometric.h; path = third_party/glm/simd/geometric.h; sourceTree = "<group>"; };
+		30A0AA54C32E74462C071894 /* integer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = integer.h; path = third_party/glm/simd/integer.h; sourceTree = "<group>"; };
+		3236C2A29F5ED114A0F1C0E2 /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = platform.h; path = third_party/glm/simd/platform.h; sourceTree = "<group>"; };
+		451FF6F38D90DB25D22FAD33 /* engine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = engine.h; path = include/engine.h; sourceTree = "<group>"; };
+		69B44FF2C3B566E48AFC5E32 /* vector_relational.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = vector_relational.h; path = third_party/glm/simd/vector_relational.h; sourceTree = "<group>"; };
+		69ED9572FC7B5F64655403B2 /* packing.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = packing.h; path = third_party/glm/simd/packing.h; sourceTree = "<group>"; };
+		7A09BC461BF35838131A6A86 /* exponential.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = exponential.h; path = third_party/glm/simd/exponential.h; sourceTree = "<group>"; };
+		C12DE7D8BAEFA44AF4EEA618 /* neon.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = neon.h; path = third_party/glm/simd/neon.h; sourceTree = "<group>"; };
+		C6D8C8443B330D36B9169684 /* trigonometric.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = trigonometric.h; path = third_party/glm/simd/trigonometric.h; sourceTree = "<group>"; };
+		CA635CAA0EB2021C50D93AEA /* common.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = common.h; path = third_party/glm/simd/common.h; sourceTree = "<group>"; };
+		DC1450239F8011D5DE23B663 /* MapHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = MapHelper.h; path = include/MapHelper.h; sourceTree = "<group>"; };
+		E88E3016FFA0CB48EFBCC656 /* engine.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; name = engine.cpp; path = engine.cpp; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D3C19328781430DA8A4C7968 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A03E4D94A3AF1FC6251BC3D4 /* Embed Libraries */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+			);
+			name = "Embed Libraries";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXGroup section */
+		54DDE4B676A991E8B35EBAF6 /* detail */ = {
+			isa = PBXGroup;
+			children = (
+				1E51F91462A09E86A4C7D754 /* glm.cpp */,
+			);
+			name = detail;
+			sourceTree = "<group>";
+		};
+		5E8C725002DF100215175890 /* include */ = {
+			isa = PBXGroup;
+			children = (
+				DC1450239F8011D5DE23B663 /* MapHelper.h */,
+				451FF6F38D90DB25D22FAD33 /* engine.h */,
+			);
+			name = include;
+			sourceTree = "<group>";
+		};
+		816ACCAAC9DBB0DC0E7A82EA /* simd */ = {
+			isa = PBXGroup;
+			children = (
+				CA635CAA0EB2021C50D93AEA /* common.h */,
+				7A09BC461BF35838131A6A86 /* exponential.h */,
+				2CDBDB3684414E28364F6976 /* geometric.h */,
+				30A0AA54C32E74462C071894 /* integer.h */,
+				0DDC1102522AB6749451EF42 /* matrix.h */,
+				C12DE7D8BAEFA44AF4EEA618 /* neon.h */,
+				69ED9572FC7B5F64655403B2 /* packing.h */,
+				3236C2A29F5ED114A0F1C0E2 /* platform.h */,
+				C6D8C8443B330D36B9169684 /* trigonometric.h */,
+				69B44FF2C3B566E48AFC5E32 /* vector_relational.h */,
+			);
+			name = simd;
+			sourceTree = "<group>";
+		};
+		94C38E0137B1B4B3C6D79441 /* glm */ = {
+			isa = PBXGroup;
+			children = (
+				54DDE4B676A991E8B35EBAF6 /* detail */,
+				816ACCAAC9DBB0DC0E7A82EA /* simd */,
+			);
+			name = glm;
+			sourceTree = "<group>";
+		};
+		A6C936B49B3FADE6EA134CF4 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1D17B9B8C005E06A4F2BBFF8 /* game_engine */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A7E7279CCE0D574E35144DDC /* third_party */ = {
+			isa = PBXGroup;
+			children = (
+				94C38E0137B1B4B3C6D79441 /* glm */,
+			);
+			name = third_party;
+			sourceTree = "<group>";
+		};
+		E301878F4D140981E63EF5CF /* game_engine */ = {
+			isa = PBXGroup;
+			children = (
+				E88E3016FFA0CB48EFBCC656 /* engine.cpp */,
+				5E8C725002DF100215175890 /* include */,
+				A7E7279CCE0D574E35144DDC /* third_party */,
+				A6C936B49B3FADE6EA134CF4 /* Products */,
+			);
+			name = game_engine;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		D4733A9E45FE5310F4FF78DE /* game_engine */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C1FCDB87664F79397887C1C7 /* Build configuration list for PBXNativeTarget "game_engine" */;
+			buildPhases = (
+				43A913C8E7FBB17AFA33FA08 /* Resources */,
+				AD562D1F51A8CAD163E1135F /* Sources */,
+				D3C19328781430DA8A4C7968 /* Frameworks */,
+				A03E4D94A3AF1FC6251BC3D4 /* Embed Libraries */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = game_engine;
+			productInstallPath = "$(HOME)/bin";
+			productName = game_engine;
+			productReference = 1D17B9B8C005E06A4F2BBFF8 /* game_engine */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		08FB7793FE84155DC02AAC07 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "game_engine" */;
+			compatibilityVersion = "Xcode 3.2";
+			hasScannedForEncodings = 1;
+			mainGroup = E301878F4D140981E63EF5CF /* game_engine */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				D4733A9E45FE5310F4FF78DE /* game_engine */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		43A913C8E7FBB17AFA33FA08 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AD562D1F51A8CAD163E1135F /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6FB988CECAFADC409E55270E /* engine.cpp in Sources */,
+				0DC0610CA60D46BED454474C /* glm.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		506A750772362239AEEB4B47 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CONFIGURATION_BUILD_DIR = bin/Release;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_DYNAMIC_NO_PIC = NO;
+				INSTALL_PATH = /usr/local/bin;
+				PRODUCT_NAME = game_engine;
+			};
+			name = Release;
+		};
+		F733FAB89A22216A294800F8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = "$(NATIVE_ARCH_ACTUAL)";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++17";
+				CONFIGURATION_BUILD_DIR = "$(SYMROOT)";
+				CONFIGURATION_TEMP_DIR = "$(OBJROOT)";
+				GCC_OPTIMIZATION_LEVEL = 3;
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				OBJROOT = obj;
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_CFLAGS = (
+					"-Wall",
+					"-Wextra",
+				);
+				SYMROOT = bin/Release;
+				USER_HEADER_SEARCH_PATHS = (
+					include,
+					third_party,
+				);
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1DEB928908733DD80010E9CD /* Build configuration list for PBXProject "game_engine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F733FAB89A22216A294800F8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C1FCDB87664F79397887C1C7 /* Build configuration list for PBXNativeTarget "game_engine" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				506A750772362239AEEB4B47 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+};
+rootObject = 08FB7793FE84155DC02AAC07 /* Project object */;
+}
