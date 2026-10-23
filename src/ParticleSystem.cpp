@@ -1,7 +1,7 @@
 #include "ParticleSystem.h"
 #include "ImageManager.h"
 #include "glm/glm.hpp"
-#include <chrono>
+#include <algorithm>
 
 ParticleSystem::ParticleSystem(const ParticleSystem& other) {
     emit_angle_min = other.emit_angle_min;
@@ -43,6 +43,36 @@ ParticleSystem::ParticleSystem(const ParticleSystem& other) {
     sorting_order = other.sorting_order;
 }
 
+template <typename T>
+static void Relinearize(std::vector<T>& v, int head, int count, int new_capacity) {
+    std::vector<T> out(new_capacity);
+    int old_capacity = static_cast<int>(v.size());
+    for (int i = 0; i < count; ++i) {
+        int src = head + i;
+        if (src >= old_capacity) src -= old_capacity;
+        out[i] = v[src];
+    }
+    v.swap(out);
+}
+
+void ParticleSystem::Resize(int new_capacity) {
+    Relinearize(p_x, head, count, new_capacity);
+    Relinearize(p_y, head, count, new_capacity);
+    Relinearize(x_vel, head, count, new_capacity);
+    Relinearize(y_vel, head, count, new_capacity);
+    Relinearize(angular_speeds, head, count, new_capacity);
+    Relinearize(rotations, head, count, new_capacity);
+    Relinearize(initial_scales, head, count, new_capacity);
+    Relinearize(scales, head, count, new_capacity);
+    Relinearize(start_frames, head, count, new_capacity);
+    Relinearize(color_r, head, count, new_capacity);
+    Relinearize(color_g, head, count, new_capacity);
+    Relinearize(color_b, head, count, new_capacity);
+    Relinearize(color_a, head, count, new_capacity);
+    head = 0;
+    capacity = new_capacity;
+}
+
 void ParticleSystem::Burst() {
     for (int i = 0; i < burst_quantity; i++) {
         float angle_radians = glm::radians(emit_angle_distribution.Sample());
@@ -56,29 +86,13 @@ void ParticleSystem::Burst() {
         float speed = speed_distribution.Sample();
         float rotation_speed = rotation_speed_distribution.Sample();
 
-        int p_idx;
-        if (!free_list.empty()) {
-            p_idx = free_list.front();
-            free_list.pop();
-        } else {
-            p_idx = active.size();
-            active.push_back(false);
-            p_x.push_back(0.0f);
-            p_y.push_back(0.0f);
-            x_vel.push_back(0.0f);
-            y_vel.push_back(0.0f);
-            angular_speeds.push_back(0.0f);
-            rotations.push_back(0.0f);
-            initial_scales.push_back(0.0f);
-            scales.push_back(0.0f);
-            start_frames.push_back(0);
-            color_r.push_back(0);
-            color_g.push_back(0);
-            color_b.push_back(0);
-            color_a.push_back(0);
-        }
+        // Only reached if Burst() is called from Lua beyond the size computed in OnStart.
+        if (count == capacity) Resize(std::max({capacity * 2, burst_quantity, 1}));
 
-        active[p_idx] = true; 
+        int p_idx = head + count;
+        if (p_idx >= capacity) p_idx -= capacity;
+        count++;
+
         p_x[p_idx] = this->x + (cos_angle * radius);
         p_y[p_idx] = this->y + (sin_angle * radius);
         x_vel[p_idx] = cos_angle * speed;
@@ -111,76 +125,85 @@ void ParticleSystem::OnStart() {
     if (burst_quantity < 1) burst_quantity = 1;
     if (duration_frames < 1) duration_frames = 1;
 
-    int max_particles = glm::ceil(duration_frames / frames_between_bursts) * burst_quantity;
-    p_x.reserve(max_particles);
-    p_y.reserve(max_particles);
-    x_vel.reserve(max_particles);
-    y_vel.reserve(max_particles);
-    angular_speeds.reserve(max_particles);
-    rotations.reserve(max_particles);
-    initial_scales.reserve(max_particles);
-    scales.reserve(max_particles);
-    start_frames.reserve(max_particles);
-    color_r.reserve(max_particles);
-    color_g.reserve(max_particles);
-    color_b.reserve(max_particles);
-    color_a.reserve(max_particles);
-    active.reserve(max_particles);
+    // Most bursts that can be alive at once, so steady-state emission never grows the buffers.
+    int max_bursts_alive = (duration_frames + frames_between_bursts - 1) / frames_between_bursts;
+    int max_particles = max_bursts_alive * burst_quantity;
+    if (max_particles > capacity) Resize(max_particles);
+}
+
+void ParticleSystem::Simulate(int begin, int end) {
+    const float gx = gravity_scale_x;
+    const float gy = gravity_scale_y;
+    const float drag = drag_factor;
+    const float angular_drag = angular_drag_factor;
+
+    float* __restrict px = p_x.data();
+    float* __restrict py = p_y.data();
+    float* __restrict vx = x_vel.data();
+    float* __restrict vy = y_vel.data();
+    float* __restrict av = angular_speeds.data();
+    float* __restrict rot = rotations.data();
+
+    for (int i = begin; i < end; ++i) {
+        vx[i] = (vx[i] + gx) * drag;
+        vy[i] = (vy[i] + gy) * drag;
+        av[i] *= angular_drag;
+        px[i] += vx[i];
+        py[i] += vy[i];
+        rot[i] += av[i];
+    }
+
+    // Lifetime-based properties: the per-system checks are hoisted out of the per-particle loop.
+    const int frame = local_frame_number;
+    const float duration = static_cast<float>(duration_frames);
+    const int* __restrict start = start_frames.data();
+
+    if (!std::isnan(end_scale)) {
+        const float* __restrict init = initial_scales.data();
+        float* __restrict sc = scales.data();
+        for (int i = begin; i < end; ++i) {
+            sc[i] = glm::mix(init[i], end_scale, static_cast<float>(frame - start[i]) / duration);
+        }
+    }
+
+    auto lerp_channel = [&](std::vector<int16_t>& channel, int16_t from, int16_t to) {
+        if (to < 0) return;
+        int16_t* __restrict c = channel.data();
+        for (int i = begin; i < end; ++i) {
+            c[i] = glm::mix(from, to, static_cast<float>(frame - start[i]) / duration);
+        }
+    };
+    lerp_channel(color_r, start_color_r, end_color_r);
+    lerp_channel(color_g, start_color_g, end_color_g);
+    lerp_channel(color_b, start_color_b, end_color_b);
+    lerp_channel(color_a, start_color_a, end_color_a);
+}
+
+void ParticleSystem::Submit(int begin, int end) {
+    for (int i = begin; i < end; ++i) {
+        ImageManager::DrawEx(image, p_x[i], p_y[i], rotations[i], scales[i], scales[i], 0.5f, 0.5f, color_r[i], color_g[i], color_b[i], color_a[i], sorting_order);
+    }
 }
 
 void ParticleSystem::OnUpdate() {
+    // Retire expired particles before emitting, so a full ring frees space for this frame's burst.
+    while (count > 0 && local_frame_number - start_frames[head] >= duration_frames) {
+        if (++head == capacity) head = 0;
+        --count;
+    }
+
     if (local_frame_number % frames_between_bursts == 0 && emission_allowed) {
         Burst();
     }
 
-    for (int i = 0; i < active.size(); ++i) {
-        if (!active[i]) continue;
+    active_particles = count;
 
-        active_particles++;
-
-        int frames_particle_been_alive = local_frame_number - start_frames[i];
-        
-        if (frames_particle_been_alive >= duration_frames) {
-            active[i] = false;
-            free_list.push(i);
-            continue;
-        } 
-
-        x_vel[i] += gravity_scale_x;
-        y_vel[i] += gravity_scale_y;
-
-        x_vel[i] *= drag_factor;
-        y_vel[i] *= drag_factor;
-        angular_speeds[i] *= angular_drag_factor;
-
-        p_x[i] += x_vel[i];
-        p_y[i] += y_vel[i];
-        rotations[i] += angular_speeds[i];
-
-        float lifetime_progress = static_cast<float>(frames_particle_been_alive) / duration_frames;
-
-        if (!std::isnan(end_scale)) {
-            scales[i] = glm::mix(initial_scales[i], end_scale, lifetime_progress);
-        }
-
-        if (end_color_r >= 0) {
-            color_r[i] = glm::mix(start_color_r, end_color_r, lifetime_progress);
-        }
-
-        if (end_color_g >= 0) {
-            color_g[i] = glm::mix(start_color_g, end_color_g, lifetime_progress);
-        }
-
-        if (end_color_b >= 0) {
-            color_b[i] = glm::mix(start_color_b, end_color_b, lifetime_progress);
-        }
-
-        if (end_color_a >= 0) {
-            color_a[i] = glm::mix(start_color_a, end_color_a, lifetime_progress);
-        }
-
-        ImageManager::DrawEx(image, p_x[i], p_y[i], rotations[i], scales[i], scales[i], 0.5f, 0.5f, color_r[i], color_g[i], color_b[i], color_a[i], sorting_order);
-    }
+    // The live range may wrap around the end of the ring; process it as two contiguous spans.
+    int first_span = std::min(count, capacity - head);
+    Simulate(head, head + first_span);
+    Simulate(0, count - first_span);
+    Submit(head, head + first_span);
+    Submit(0, count - first_span);
 
     local_frame_number++;
 }

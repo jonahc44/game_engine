@@ -1,3 +1,5 @@
+// PBench.h hooks
+#include <cstdlib>
 /* Hey Student --
  * Take a look at some of the public static variables below-- you may use them to help you debug.
  */
@@ -63,7 +65,7 @@ public:
 
 	static SDL_Renderer* SDL_CreateRenderer(SDL_Window* window, int index, Uint32 flags)
 	{
-		if (IsAutograderMode())
+		if (IsAutograderMode() || std::getenv("PBENCH"))
 			flags &= ~SDL_RENDERER_PRESENTVSYNC; // VSync is disabled to let frames render faster in the autograder.
 
 		SDL_Renderer* renderer = ::SDL_CreateRenderer(window, index, flags);
@@ -402,7 +404,7 @@ private:
 	/* If the engine detects it is being autograded, it will run as fast as possible. */
 	static void SDL_Delay() {
 
-		if (_autograder_mode)
+		if (_autograder_mode || std::getenv("PBENCH"))
 		{
 			//::SDL_Delay(1); Don't bother delaying at all. Gotta go fast when autograding.
 		}

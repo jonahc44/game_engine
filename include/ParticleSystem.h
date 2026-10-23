@@ -74,7 +74,11 @@ public:
     RandomEngine speed_distribution;
     RandomEngine rotation_speed_distribution;
 
-    // std::vector<Particle> particles;
+    // Ring buffer
+    int head = 0;
+    int count = 0;
+    int capacity = 0;
+
     std::vector<float> p_x;
     std::vector<float> p_y;
     std::vector<float> x_vel;
@@ -88,8 +92,6 @@ public:
     std::vector<int16_t> color_g;
     std::vector<int16_t> color_b;
     std::vector<int16_t> color_a;
-    std::vector<bool> active;
-    std::queue<int> free_list;
 
     ParticleSystem() {};
     ParticleSystem(const ParticleSystem&);
@@ -98,6 +100,11 @@ public:
     void Stop();
     void Play();
     void Burst();
-};  
+
+private:
+    void Resize(int new_capacity);
+    void Simulate(int begin, int end);
+    void Submit(int begin, int end);
+};
 
 #endif

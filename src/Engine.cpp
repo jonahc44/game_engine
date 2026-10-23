@@ -441,7 +441,6 @@ void Engine::GameLoop() {
         EventManager::ProcessSubscriptions();
         SDL_RenderClear(renderer);
         PhysicsManager::Step();
-        Render();        
         Helper::SDL_RenderPresent(renderer);
         Input::LateUpdate();
 
