@@ -183,6 +183,9 @@ project "game_engine"
 
       defines { "LUA_USE_LINUX" }
 
+      libdirs { "third_party/SDL2_ttf/lib" }
+      linkoptions { "-Wl,-rpath,'$$ORIGIN/third_party/SDL2_ttf/lib'" }
+
       links { 
           "SDL2_image", 
           "SDL2_mixer", 
